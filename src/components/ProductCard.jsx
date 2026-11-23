@@ -35,6 +35,7 @@ function ProductCard({
   inStock,
   onAddToCart,
   children,
+  image,
 }) {
   const formattedPrice = `₱${price.toLocaleString("en-PH", {
     minimumFractionDigits: 2,
@@ -50,7 +51,23 @@ function ProductCard({
             {children}
           </span>
         )}
-        <Icon className="product-icon" strokeWidth={1.35} />
+        {image ? (
+          <img
+            className="product-image"
+            src={image}
+            alt=""
+            loading="lazy"
+            onError={(event) => {
+              event.currentTarget.style.display = "none";
+              event.currentTarget.nextElementSibling?.removeAttribute("hidden");
+            }}
+          />
+        ) : null}
+        <Icon
+          className="product-icon"
+          strokeWidth={1.35}
+          hidden={Boolean(image)}
+        />
       </div>
 
       <div className="product-meta">

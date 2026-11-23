@@ -68,6 +68,22 @@
   transition: transform 240ms ease, color 240ms ease;
 }
 
+.product-image {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  mix-blend-mode: multiply;
+  transition: transform 240ms ease, filter 240ms ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.035);
+  filter: saturate(1.06);
+}
+
 .product-card:hover .product-icon {
   transform: scale(1.06) translateY(-2px);
   color: #047857;

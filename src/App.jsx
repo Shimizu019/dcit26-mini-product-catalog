@@ -152,6 +152,7 @@ function App() {
                 category={product.category}
                 inStock={product.inStock}
                 onAddToCart={handleAddToCart}
+                image={product.image}
               >
                 {product.badge}
               </ProductCard>
