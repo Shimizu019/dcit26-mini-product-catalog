@@ -78,3 +78,40 @@ React uses the `key` prop to identify each rendered item and determine which ite
 ### 5. What does the `children` prop allow you to do that a normal prop does not?
 
 The `children` prop lets a parent place nested JSX content between a component's opening and closing tags. In this project, the parent passes `<span>New</span>` or `<span>Sale</span>` inside `ProductCard`, and the card renders that content in its badge slot. A normal prop also passes values, but it does not provide this direct nested-JSX composition pattern.
+
+## Laboratory Exercise 4: Live Search and Filter
+
+Laboratory Exercise 4 extends CvSU Mini Store with a controlled search and filter toolbar. The application now supports keyword search, category filtering, price sorting, clearing all filters, result counts, an empty state, a 300ms search debounce, and dynamic browser-tab titles.
+
+### Lab 4 Features
+
+- Controlled text, category, and sort inputs are managed by `App.jsx`.
+- Typing is debounced for 300ms before it updates the actual search value used for filtering.
+- Products are filtered case-insensitively by title and optionally by category.
+- Price sorting runs on a copied filtered array, leaving the original product data unchanged.
+- The result count shows how many products match compared with the full 8-product catalog.
+- No matches display: `"No products found. Try a different keyword or category."`
+- Clearing filters restores the search, category, sort, and displayed results.
+- The document title updates to include the current number of results.
+
+### Lab 4 Guide Questions & Answers
+
+#### 1. Why do we use two separate states, `searchText` and `debouncedSearch`, instead of only one?
+
+`searchText` updates immediately so the search field feels responsive as the user types. `debouncedSearch` updates only after typing pauses for 300ms, which avoids recalculating and rerendering the filtered list for every keystroke.
+
+#### 2. What would happen if the debounce effect did not return a cleanup function?
+
+Older timers could remain active after `searchText` changes. Several timers might eventually update `debouncedSearch`, including timers based on outdated text, causing unnecessary work and stale or flickering results.
+
+#### 3. What is the purpose of the dependency array? What happens if it is empty (`[]`)? What happens if it is left out completely?
+
+The dependency array tells React when to rerun an effect. With `[searchText]`, the debounce effect runs when `searchText` changes. With `[]`, it runs only once after the initial render. With no dependency array, it runs after every render, which can create repeated effects or even loops when the effect updates state.
+
+#### 4. Why should we avoid sorting the original `products` array directly?
+
+JavaScript's `sort()` mutates the array in place. Sorting `products` directly would permanently change the catalog's original order. The app instead copies the filtered array and sorts the copy, preserving the source dataset.
+
+#### 5. Is the filtered product list better stored in its own state, or calculated from existing state during rendering? Explain your choice.
+
+It is better to calculate the filtered list from existing state during rendering. It is derived entirely from `debouncedSearch`, `category`, `sortOrder`, and `products`, so storing a separate state would duplicate data and could become out of sync. Deriving it in render keeps one source of truth.
