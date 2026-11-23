@@ -1,32 +1,4 @@
-import {
-  BookOpen,
-  Keyboard,
-  Laptop,
-  Mouse,
-  NotebookPen,
-  Usb,
-  CupSoda,
-  ShoppingBag,
-} from "lucide-react";
 import "./ProductCard.css";
-
-const categoryIcons = {
-  Electronics: Mouse,
-  Books: BookOpen,
-  "School Supplies": NotebookPen,
-  Accessories: Laptop,
-};
-
-const titleIcons = {
-  "Wireless Mouse": Mouse,
-  "Mechanical Keyboard": Keyboard,
-  "USB-C Hub": Usb,
-  "JavaScript Handbook": BookOpen,
-  "React Essentials": BookOpen,
-  "Notebook Set": NotebookPen,
-  "Laptop Sleeve": Laptop,
-  "Water Bottle": CupSoda,
-};
 
 function ProductCard({
   title,
@@ -35,48 +7,32 @@ function ProductCard({
   inStock,
   onAddToCart,
   children,
-  image,
 }) {
   const formattedPrice = `₱${price.toLocaleString("en-PH", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
-  const Icon = titleIcons[title] || categoryIcons[category] || ShoppingBag;
 
   return (
-    <div className={`product-card ${!inStock ? "out-of-stock" : ""}`}>
+    <article className={`product-card ${inStock ? "" : "out-of-stock"}`}>
       <div className="product-visual" aria-hidden="true">
-        {children && (
-          <span className={`badge ${String(children).toLowerCase()}`}>
-            {children}
-          </span>
-        )}
-        {image ? (
-          <img
-            className="product-image"
-            src={image}
-            alt=""
-            loading="lazy"
-            onError={(event) => {
-              event.currentTarget.style.display = "none";
-              event.currentTarget.nextElementSibling?.removeAttribute("hidden");
-            }}
-          />
-        ) : null}
-        <Icon
-          className="product-icon"
-          strokeWidth={1.35}
-          hidden={Boolean(image)}
-        />
+        {children && <div className="badge-slot">{children}</div>}
+        <span className="product-monogram">
+          {title
+            .split(" ")
+            .map((word) => word[0])
+            .join("")
+            .slice(0, 2)}
+        </span>
       </div>
 
       <div className="product-meta">
         <p className="product-category">{category}</p>
-        {inStock ? (
-          <span className="stock-label in-stock">In Stock</span>
-        ) : (
-          <span className="stock-label out-of-stock-label">Out of Stock</span>
-        )}
+        <span
+          className={`stock-label ${inStock ? "in-stock" : "out-of-stock-label"}`}
+        >
+          {inStock ? "In Stock" : "Out of Stock"}
+        </span>
       </div>
 
       <div className="product-copy">
@@ -85,13 +41,14 @@ function ProductCard({
       </div>
 
       <button
+        type="button"
         className="add-to-cart-btn"
         disabled={!inStock}
         onClick={() => onAddToCart(title)}
       >
         {inStock ? "Add to Cart" : "Unavailable"}
       </button>
-    </div>
+    </article>
   );
 }
 
