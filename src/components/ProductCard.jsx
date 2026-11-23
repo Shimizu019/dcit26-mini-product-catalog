@@ -1,4 +1,32 @@
+import {
+  BookOpen,
+  Keyboard,
+  Laptop,
+  Mouse,
+  NotebookPen,
+  Usb,
+  CupSoda,
+  ShoppingBag,
+} from "lucide-react";
 import "./ProductCard.css";
+
+const categoryIcons = {
+  Electronics: Mouse,
+  Books: BookOpen,
+  "School Supplies": NotebookPen,
+  Accessories: Laptop,
+};
+
+const titleIcons = {
+  "Wireless Mouse": Mouse,
+  "Mechanical Keyboard": Keyboard,
+  "USB-C Hub": Usb,
+  "JavaScript Handbook": BookOpen,
+  "React Essentials": BookOpen,
+  "Notebook Set": NotebookPen,
+  "Laptop Sleeve": Laptop,
+  "Water Bottle": CupSoda,
+};
 
 function ProductCard({
   title,
@@ -8,28 +36,43 @@ function ProductCard({
   onAddToCart,
   children,
 }) {
-  const formattedPrice = `₱${price.toFixed(2)}`;
+  const formattedPrice = `₱${price.toLocaleString("en-PH", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+  const Icon = titleIcons[title] || categoryIcons[category] || ShoppingBag;
 
   return (
     <div className={`product-card ${!inStock ? "out-of-stock" : ""}`}>
-      {children && <div className="badge">{children}</div>}
+      <div className="product-visual" aria-hidden="true">
+        {children && (
+          <span className={`badge ${String(children).toLowerCase()}`}>
+            {children}
+          </span>
+        )}
+        <Icon className="product-icon" strokeWidth={1.35} />
+      </div>
 
-      <h3 className="product-title">{title}</h3>
-      <p className="product-category">{category}</p>
-      <p className="product-price">{formattedPrice}</p>
+      <div className="product-meta">
+        <p className="product-category">{category}</p>
+        {inStock ? (
+          <span className="stock-label in-stock">In Stock</span>
+        ) : (
+          <span className="stock-label out-of-stock-label">Out of Stock</span>
+        )}
+      </div>
 
-      {inStock ? (
-        <span className="stock-label in-stock">In Stock</span>
-      ) : (
-        <span className="stock-label out-of-stock-label">Out of Stock</span>
-      )}
+      <div className="product-copy">
+        <h3 className="product-title">{title}</h3>
+        <p className="product-price">{formattedPrice}</p>
+      </div>
 
       <button
         className="add-to-cart-btn"
         disabled={!inStock}
         onClick={() => onAddToCart(title)}
       >
-        Add to Cart
+        {inStock ? "Add to Cart" : "Unavailable"}
       </button>
     </div>
   );

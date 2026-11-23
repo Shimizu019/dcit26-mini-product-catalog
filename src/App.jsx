@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
+import { ShoppingBag, Search, SlidersHorizontal } from "lucide-react";
 import ProductCard from "./components/ProductCard";
-import SearchBar from "./components/SearchBar";
 import products from "./data/products";
 import "./App.css";
 
@@ -55,51 +55,110 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>CvSU Mini Store</h1>
-        <p className="cart-message">
-          {cartCount === 0
-            ? "Your cart is empty."
-            : `Items added to cart: ${cartCount} (Last added: ${lastAdded})`}
-        </p>
+    <div className="min-h-screen bg-[#FAFAFA] text-[#111827]">
+      <header className="store-header">
+        <div className="header-inner">
+          <div className="brand-lockup">
+            <div className="brand-mark" aria-hidden="true">
+              <ShoppingBag size={21} strokeWidth={2} />
+            </div>
+            <div>
+              <h1>CvSU Mini Store</h1>
+              <p>Campus Tech, Books &amp; Everyday Essentials</p>
+            </div>
+          </div>
+
+          <div className="cart-message" role="status" aria-live="polite">
+            <ShoppingBag size={16} strokeWidth={2} />
+            <span>
+              {cartCount === 0
+                ? "Your cart is empty."
+                : `Items added to cart: ${cartCount} (Last added: ${lastAdded})`}
+            </span>
+          </div>
+        </div>
       </header>
 
-      <SearchBar
-        searchText={searchText}
-        setSearchText={setSearchText}
-        category={category}
-        setCategory={setCategory}
-        sortOrder={sortOrder}
-        setSortOrder={setSortOrder}
-        onClear={handleClearFilters}
-      />
+      <main className="store-main">
+        <div className="catalog-toolbar">
+          <div className="toolbar-heading">
+            <p>Student collection</p>
+            <h2>Campus essentials</h2>
+          </div>
 
-      <p className="results-count">
-        Showing {sortedProducts.length} of {products.length} products
-      </p>
+          <div className="search-bar">
+            <label className="search-field">
+              <Search size={17} aria-hidden="true" />
+              <input
+                type="search"
+                className="search-input"
+                placeholder="Search products"
+                value={searchText}
+                onChange={(event) => setSearchText(event.target.value)}
+              />
+            </label>
 
-      {sortedProducts.length === 0 ? (
-        <p className="empty-state">
-          No products found. Try a different keyword or category.
-        </p>
-      ) : (
-        <div className="product-grid">
-          {sortedProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              title={product.title}
-              price={product.price}
-              category={product.category}
-              inStock={product.inStock}
-              onAddToCart={handleAddToCart}
+            <label className="select-field">
+              <SlidersHorizontal size={16} aria-hidden="true" />
+              <select
+                className="category-select"
+                value={category}
+                onChange={(event) => setCategory(event.target.value)}
+                aria-label="Filter by category"
+              >
+                <option value="All">All categories</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Books">Books</option>
+                <option value="School Supplies">School Supplies</option>
+                <option value="Accessories">Accessories</option>
+              </select>
+            </label>
+
+            <select
+              className="sort-select"
+              value={sortOrder}
+              onChange={(event) => setSortOrder(event.target.value)}
+              aria-label="Sort products"
             >
-              {product.id === 1 && "New"}
-              {product.id === 5 && "Sale"}
-            </ProductCard>
-          ))}
+              <option value="default">Featured</option>
+              <option value="low-high">Price: Low to High</option>
+              <option value="high-low">Price: High to Low</option>
+            </select>
+
+            <button className="clear-filters-btn" onClick={handleClearFilters}>
+              Clear
+            </button>
+          </div>
         </div>
-      )}
+
+        <div className="results-row">
+          <p>
+            Showing <strong>{sortedProducts.length}</strong> of {products.length} products
+          </p>
+          {sortedProducts.length > 0 && <span>{category === "All" ? "All categories" : category}</span>}
+        </div>
+
+        {sortedProducts.length === 0 ? (
+          <p className="empty-state">
+            No products found. Try a different keyword or category.
+          </p>
+        ) : (
+          <div className="product-grid">
+            {sortedProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                title={product.title}
+                price={product.price}
+                category={product.category}
+                inStock={product.inStock}
+                onAddToCart={handleAddToCart}
+              >
+                {product.badge}
+              </ProductCard>
+            ))}
+          </div>
+        )}
+      </main>
     </div>
   );
 }
