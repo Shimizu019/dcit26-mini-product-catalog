@@ -1,0 +1,98 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: #f4f6f9;
+  color: #222;
+}
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.app-header h1 {
+  margin: 0 0 6px 0;
+  color: #2f3b52;
+}
+
+.cart-message {
+  font-weight: 600;
+  color: #4a69bd;
+}
+
+.search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 16px;
+  background: #fff;
+  padding: 14px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.search-input {
+  flex: 1 1 220px;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.category-select,
+.sort-select {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.clear-filters-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #e8edf7;
+  color: #2f3b52;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.clear-filters-btn:hover {
+  background: #d7e0f3;
+}
+
+.results-count {
+  text-align: center;
+  color: #555;
+  margin-bottom: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  margin-top: 40px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 480px) {
+  .search-bar {
+    flex-direction: column;
+  }
+}
