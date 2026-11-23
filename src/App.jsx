@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCard from "./components/ProductCard";
 import SearchBar from "./components/SearchBar";
 import products from "./data/products";
@@ -16,6 +16,14 @@ function App() {
     setCartCount((previousCount) => previousCount + 1);
     setLastAdded(title);
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchText);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchText]);
 
   const filteredProducts = products
     .filter((product) =>
@@ -43,6 +51,10 @@ function App() {
     setCategory("All");
     setSortOrder("default");
   };
+
+  useEffect(() => {
+    document.title = `CvSU Mini Store (${filteredProducts.length} results)`;
+  }, [filteredProducts.length]);
 
   return (
     <div className="app">
