@@ -1,15 +1,47 @@
 import { useState } from "react";
 import ProductCard from "./components/ProductCard";
+import SearchBar from "./components/SearchBar";
 import products from "./data/products";
 import "./App.css";
 
 function App() {
   const [cartCount, setCartCount] = useState(0);
   const [lastAdded, setLastAdded] = useState("");
+  const [searchText, setSearchText] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [category, setCategory] = useState("All");
+  const [sortOrder, setSortOrder] = useState("default");
 
   const handleAddToCart = (title) => {
     setCartCount((previousCount) => previousCount + 1);
     setLastAdded(title);
+  };
+
+  const filteredProducts = products
+    .filter((product) =>
+      product.title
+        .toLowerCase()
+        .includes(debouncedSearch.toLowerCase())
+    )
+    .filter(
+      (product) => category === "All" || product.category === category
+    );
+
+  const sortedProducts = [...filteredProducts].sort((first, second) => {
+    if (sortOrder === "low-to-high") {
+      return first.price - second.price;
+    }
+    if (sortOrder === "high-to-low") {
+      return second.price - first.price;
+    }
+    return 0;
+  });
+
+  const handleClearFilters = () => {
+    setSearchText("");
+    setDebouncedSearch("");
+    setCategory("All");
+    setSortOrder("default");
   };
 
   return (
@@ -38,21 +70,41 @@ function App() {
           <h2>Campus essentials</h2>
         </div>
 
-        <div className="product-grid">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              title={product.title}
-              price={product.price}
-              category={product.category}
-              inStock={product.inStock}
-              onAddToCart={handleAddToCart}
-            >
-              {product.id === 1 && <span>New</span>}
-              {product.id === 4 && <span>Sale</span>}
-            </ProductCard>
-          ))}
-        </div>
+        <SearchBar
+          searchText={searchText}
+          onSearchChange={setSearchText}
+          category={category}
+          onCategoryChange={setCategory}
+          sortOrder={sortOrder}
+          onSortChange={setSortOrder}
+          onClearFilters={handleClearFilters}
+        />
+
+        <p className="results-count">
+          Showing {sortedProducts.length} of {products.length} products
+        </p>
+
+        {sortedProducts.length === 0 ? (
+          <p className="empty-state">
+            No products found. Try a different keyword or category.
+          </p>
+        ) : (
+          <div className="product-grid">
+            {sortedProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                title={product.title}
+                price={product.price}
+                category={product.category}
+                inStock={product.inStock}
+                onAddToCart={handleAddToCart}
+              >
+                {product.id === 1 && <span>New</span>}
+                {product.id === 4 && <span>Sale</span>}
+              </ProductCard>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );
